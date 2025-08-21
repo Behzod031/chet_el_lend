@@ -21,8 +21,8 @@ creds = Credentials.from_service_account_file(SERVICE_ACCOUNT_FILE, scopes=SCOPE
 client = gspread.authorize(creds)
 
 # Открываем таблицу и лист
-spreadsheet = client.open("Chet-el mijozlar")
-worksheet = spreadsheet.worksheet("MyLandingDB")
+spreadsheet = client.open("Xonsaroy_Online_Chat")
+worksheet = spreadsheet.worksheet("EFIR")
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
