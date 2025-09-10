@@ -1,42 +1,46 @@
-import os
 from flask import Flask, render_template, request
 import gspread
 from google.oauth2.service_account import Credentials
+from datetime import datetime
+import os
 
 app = Flask(__name__)
 
-# Путь к JSON-файлу с ключами: из переменной окружения или по умолчанию рядом с app.py
-SERVICE_ACCOUNT_FILE = os.environ.get(
-    "GOOGLE_CREDENTIALS_PATH",
-    os.path.join(os.path.dirname(__file__), "credentials.json")
-)
-
+# Путь к credentials.json
+SERVICE_ACCOUNT_FILE = os.path.join(os.path.dirname(__file__), "credentials.json")
 SCOPES = [
     "https://www.googleapis.com/auth/spreadsheets",
     "https://www.googleapis.com/auth/drive"
 ]
 
-# Авторизация в Google Sheets
+# Авторизация Google Sheets
 creds = Credentials.from_service_account_file(SERVICE_ACCOUNT_FILE, scopes=SCOPES)
 client = gspread.authorize(creds)
 
 # Открываем таблицу и лист
 spreadsheet = client.open("Xonsaroy_Online_Chat")
-worksheet = spreadsheet.worksheet("EFIR")
+worksheet = spreadsheet.worksheet("WEBINAR_FORMA")
+
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
+    success = False
+    name = None
+
     if request.method == 'POST':
         name = request.form.get('name')
         phone = request.form.get('phone')
-        country = request.form.get('country')
+        city = request.form.get('city')
+        date = datetime.now().strftime('%Y-%m-%d')
 
-        # Записываем данные в таблицу
-        worksheet.append_row([name, phone, country])
+        # Сохраняем данные
+        worksheet.append_row([name, phone, city, date])
 
-        # Рендерим страницу с переходом в Telegram
-        return render_template('telegram.html')
-    return render_template('index.html')
+        # Показываем сообщение в index.html
+        success = True
+
+    return render_template('index.html', success=success, name=name)
+
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=int(os.environ.get("PORT", 1232)), debug=False)
+    app.run(debug=False, host='0.0.0.0', port=1232)
