@@ -16,7 +16,7 @@
     t.src=v;s=b.getElementsByTagName(e)[0];
     s.parentNode.insertBefore(t,s)}(window, document,'script',
     'https://connect.facebook.net/en_US/fbevents.js');
-    fbq('init', 'ВАШ_PIXEL_ID');  /* замените на свой Pixel ID */
+    fbq('init', 'ВАШ_PIXEL_ID');
     fbq('track', 'PageView');
   </script>
   <noscript>
@@ -33,15 +33,24 @@
           Qo‘shimcha ma’lumot<br>
           uchun shaklni to‘ldiring
         </h1>
-        <form method="POST" action="/" class="hero-form">
-          <div class="form-group">
-            <input type="text" name="name" placeholder="Ismingiz" required>
+
+        {% if success %}
+          <div class="success-message">
+            <h2>Rahmat, {{ name }}!</h2>
+            <p>Siz ro'yhatdan mufuqiyatli o'tdingiz ✅</p>
           </div>
-          <div class="form-group">
-            <input type="tel" name="phone" placeholder="Telefon raqamingiz" required>
-          </div>
-          <button type="submit">Yuborish</button>
-        </form>
+        {% else %}
+          <form method="POST" action="/" class="hero-form">
+            <div class="form-group">
+              <input type="text" name="name" placeholder="Ismingiz" required>
+            </div>
+            <div class="form-group">
+              <input type="tel" name="phone" placeholder="Telefon raqamingiz" required>
+            </div>
+            <button type="submit">Yuborish</button>
+          </form>
+        {% endif %}
+
       </div>
     </div>
   </header>
